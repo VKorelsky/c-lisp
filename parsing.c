@@ -16,7 +16,7 @@ int nb_nodes(mpc_ast_t* t) {
   return 0;
 }
 
-long eval_op(long x, char* c, long y) {
+long eval_op(long x, char* op, long y) {
   if (strcmp(op, "+") == 0) { return x + y; }
   if (strcmp(op, "-") == 0) { return x - y; }
   if (strcmp(op, "*") == 0) { return x * y; }
@@ -71,7 +71,8 @@ int main(int argc, char** argv) {
     if (mpc_parse("<stdin>", input, Kispy, &r)) {
       /* Success */
 
-      mpc_ast_print(r.output);
+      long result = eval(r.output);
+      printf("%li\n", result);
       mpc_ast_delete(r.output);
     } else {
       /* Error */
