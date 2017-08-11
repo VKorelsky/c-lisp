@@ -4,7 +4,7 @@
 #include "mpc.h"
 
 int nb_nodes(mpc_ast_t* t) {
-  /* return number of nodes in a tree, recursively*/
+  /* return number of nodes in the tree t, recursively*/
   if (t->children_num == 0) {return 1;}
   if (t->children_num >= 1) {
     int total = 1;
@@ -14,6 +14,31 @@ int nb_nodes(mpc_ast_t* t) {
     return total;
   }
   return 0;
+}
+
+long eval_op(long x, char* c, long y) {
+  if (strcmp(op, "+") == 0) { return x + y; }
+  if (strcmp(op, "-") == 0) { return x - y; }
+  if (strcmp(op, "*") == 0) { return x * y; }
+  if (strcmp(op, "/") == 0) { return x / y; }
+  return 0;
+}
+
+long eval(mpc_ast_t* t) {
+  /* evaluates the value of the tree, recursively */
+  /* base case -> return a number if tag indicates number */
+  if(strstr(t->tag, "number")) { return atoi(t->contents); }
+
+  char* op = t->children[1]->contents;
+  long x = eval(t->children[2]);
+
+  int i = 3;
+  while (strstr(t->children[i]->tag, "expr")) {
+    x = eval_op(x, op, eval(t->children[i]));
+    i++;
+  }
+
+  return x;
 }
 
 int main(int argc, char** argv) {
@@ -45,7 +70,7 @@ int main(int argc, char** argv) {
 
     if (mpc_parse("<stdin>", input, Kispy, &r)) {
       /* Success */
-      
+
       mpc_ast_print(r.output);
       mpc_ast_delete(r.output);
     } else {
