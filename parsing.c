@@ -5,7 +5,7 @@
 
 int nb_nodes(mpc_ast_t* t) {
   /* return number of nodes in the tree t, recursively*/
-  if (t->children_num == 0) {return 1;}
+  if (t->children_num == 0) return 1;
   if (t->children_num >= 1) {
     int total = 1;
     for (int i = 0; i < t->children_num; i++) {
@@ -67,6 +67,8 @@ int main(int argc, char** argv) {
     add_history(input);
 
     mpc_result_t r;
+
+    if (strcmp(input, "exit") == 0) { break; }
 
     if (mpc_parse("<stdin>", input, Kispy, &r)) {
       /* Success */
